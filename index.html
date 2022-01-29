@@ -1,0 +1,254 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <title>Trying hard in wordle</title>
+    <script src="data.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&family=Work+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div>
+    </div>
+    <div id="displayResult"></div>
+    <div id="displayScoreResult"></div>
+
+    <script>
+        // var test = ["hhass", "abdcs", "mhule", "abdcs"];
+        var display = document.getElementById('displayResult');
+        var displayScore = document.getElementById('displayScoreResult');
+
+        var test = JSON.parse(JSON.stringify(sample));
+        console.log("Initial length", test.length);
+        var purgedArray = [];
+
+        var dupeArray = [];
+        const alphabet = [];
+        var alphabetObj = {
+            char1: {
+                "a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0
+            },
+            char2: {
+                "a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0
+            },
+            char3: {
+                "a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0
+            },
+            char4: {
+                "a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0
+            },
+            char5: {
+                "a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "f": 0, "g": 0, "h": 0, "i": 0, "j": 0, "k": 0, "l": 0, "m": 0, "n": 0, "o": 0, "p": 0, "q": 0, "r": 0, "s": 0, "t": 0, "u": 0, "v": 0, "w": 0, "x": 0, "y": 0, "z": 0
+            },
+        }
+
+
+        const getRepeatedChars = (str) => {
+            const chars = {};
+            for (const char of str) {
+                chars[char] = (chars[char] || 0) + 1;
+            }
+
+            var duplicates = Object.entries(chars).filter(char => char[1] > 1).map(char => dupeArray.push(char[0]));
+            // console.log("dupeArray", dupeArray);
+            return dupeArray.length;
+            //    return Object.entries(chars).filter(char => char[1] > 1).map(char => char[0]);
+        }
+
+        function checkString(text, index) {
+            if ((text.length - index) == 0) { //stop condition
+                return false;
+            } else {
+                return checkString(text, index + 1)
+                    || text.substr(0, index).indexOf(text[index]) != -1;
+            }
+        }
+        console.log("checkString", checkString("would", 0));
+
+        var checkIndex = false;
+
+        test.forEach((string, index) => {
+            if (string == "there") {
+                console.log("=============================");
+            }
+            // if (checkString(string, 0)) {
+            //     console.log("removed", string);
+            //     test.splice(index, 1)
+            // }
+
+            if (!checkString(string, 0)) {
+                purgedArray.push(string);
+            }
+            if (index == test.length - 1) {
+                checkIndex = true;
+            }
+
+        })
+
+
+
+
+        console.log("1st purge", test.length);
+
+        if (checkIndex) {
+
+            purgedArray.forEach((string, index) => {
+                alphabetObj.char1[string[0]] += 1;
+                alphabetObj.char2[string[1]] += 1;
+                alphabetObj.char3[string[2]] += 1;
+                alphabetObj.char4[string[3]] += 1;
+                alphabetObj.char5[string[4]] += 1;
+            })
+
+            var sortable = [];
+            var lazyCount = 0;
+            for (var index in alphabetObj) {
+                lazyCount++;
+                var list = document.createElement('ul');
+                var head = document.createElement('h4');
+                head.innerHTML = "Letter " + lazyCount;
+                list.appendChild(head);
+                list.classList.add('list');
+                // console.log(index);
+                var innerSortable = []
+                for (var chars in alphabetObj[index]) {
+                    innerSortable.push([chars, alphabetObj[index][chars]]);
+                }
+                innerSortable.sort(function (a, b) {
+                    return b[1] - a[1];
+                });
+
+                for (var idx in innerSortable) {
+                    // console.log('chars', chars);
+                    var listItem = document.createElement('li');
+                    listItem.classList.add('listObj')
+                    var listAlphabet = document.createElement('div');
+                    var listCount = document.createElement('div');
+
+                    listAlphabet.innerHTML = innerSortable[idx][0];
+                    listCount.innerHTML = innerSortable[idx][1];
+
+                    listItem.appendChild(listAlphabet);
+                    listItem.appendChild(listCount);
+                    list.appendChild(listItem);
+
+                }
+
+                display.appendChild(list);
+
+                // for (var place in innerSortable) {
+                console.log("TOP 3 in letter " + index);
+
+                for (var i = 0; i < 10; i++) {
+                    console.log(innerSortable[i][0], innerSortable[i][1]);
+                }
+
+
+                // }
+                // console.log(innerSortable[0][0]);
+
+                sortable.push(innerSortable)
+
+            }
+
+            var result = [];
+
+
+            var BreakException = {};
+            try {
+
+                purgedArray.forEach((string, index) => {
+                    var resultString = "";
+                    var points = 0;
+                    // var letterFromScoreboard;
+                    for (var m = 0; m < sortable.length; m++) {
+                        // console.log("string[m]", string[m]);
+                        for (var n = 0; n < sortable[m].length; n++) {
+                            if (sortable[m][n][0] == string[m]) {
+                                resultString += sortable[m][n][0];
+                                points += sortable[m][n][1];
+                            }
+                        }
+                    }
+
+                    if (resultString.length == 5) {
+                        // console.log("Word found", resultString + " | " + points);
+                        result.push([resultString, points]);
+
+                    }
+                    // if (index == 5) throw BreakException;
+                })
+
+            } catch (e) {
+                if (e !== BreakException) throw e;
+            }
+
+            result.sort(function (a, b) {
+                return b[1] - a[1];
+            });
+
+            var list = document.createElement('ul');
+            var head = document.createElement('h4');
+            head.innerHTML = "Scoreboard";
+            list.appendChild(head);
+            list.classList.add('list');
+            // console.log("6%6",result.length / 10);
+            var innerList;
+            var anotherLazyCount = 0;
+            result.forEach((element, index) => {
+                
+                // console.log("index",index % (result.length / 10) == 0);
+                if (index % (Math.floor(result.length / 10)) == 0) {
+                    anotherLazyCount ++;
+                    console.log("creating");
+                    innerList = document.createElement('ul');
+                    var head = document.createElement('h4');
+                    head.innerHTML = "Scoreboard " +  anotherLazyCount ;
+                    innerList.appendChild(head);
+                    innerList.classList.add('list');
+                    displayScore.appendChild(innerList);
+
+
+                }
+                // console.log("innerList", innerList);
+
+                var listItem = document.createElement('li');
+                listItem.classList.add('listObj')
+                listItem.classList.add('biggerListObj')
+
+                var listAlphabet = document.createElement('div');
+                var listCount = document.createElement('pre');
+                listCount.classList.add('chance');
+
+                listAlphabet.innerHTML = element[0];
+                var countChance = parseInt(element[1])/Math.pow(result.length, 5)*Math.pow(10,2)
+                // console.log(countChance);
+                listCount.innerHTML =`${countChance.toExponential(2)}%`;
+
+                listItem.appendChild(listAlphabet);
+                listItem.appendChild(listCount);
+                innerList.appendChild(listItem);
+
+            });
+
+            console.log("result", result);
+
+
+
+
+            console.log("sortable", sortable);
+
+        }
+
+
+
+        // console.log("alphabetObj", alphabetObj);
+    </script>
+
+</body>
+
+</html>

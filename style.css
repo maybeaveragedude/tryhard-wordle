@@ -1,0 +1,42 @@
+body {
+    font-family: 'Work Sans', sans-serif;
+}
+
+#displayResult {
+    display: flex;
+    justify-content: center;
+}
+
+#displayScoreResult {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0px;
+}
+
+.listObj {
+    width: 8em;
+    display: grid;
+    padding: .1em 0px;
+    grid-gap: .6em;
+    grid-template-columns: 2em 2em;
+}
+
+.listObj.biggerListObj {
+    width: 6.8em;
+    grid-template-columns: 3em 2em;
+    align-items: center;
+
+}
+
+.chance {
+    width: 6em;
+    margin: 0px;
+}
+
+.alphabet {}
+
+.count {}
